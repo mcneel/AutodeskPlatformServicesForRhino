@@ -350,3 +350,10 @@ MigrationBackup/
 .ionide/
 .DS_Store
 build/
+
+
+# Ignoring build and dist artifacts
+dist/*.yak
+dist/*.dll
+dist/*.rhp
+dist/*.gha
