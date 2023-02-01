@@ -42,7 +42,7 @@ namespace APSGHPlugin.Components
             {
                 base.Layout();
 
-                if (!APSRhino.Configs.HasConnection())
+                if (!APSRhino.IsConnected())
                 {
                     Rectangle newBounds = GH_Convert.ToRectangle(Bounds);
                     newBounds.Height += 22;
@@ -62,7 +62,7 @@ namespace APSGHPlugin.Components
             {
                 base.Render(canvas, graphics, channel);
 
-                if (channel == GH_CanvasChannel.Objects && !APSRhino.Configs.HasConnection())
+                if (channel == GH_CanvasChannel.Objects && !APSRhino.IsConnected())
                 {
                     using (var ghCapsule = _pressed ?
                       GH_Capsule.CreateTextCapsule(_btnBounds, _btnBounds, GH_Palette.Grey, _btnText, 2, 0) :
@@ -152,28 +152,12 @@ namespace APSGHPlugin.Components
                     _connectionInfo = connectionInfo;
             }
 
-            if (APSRhino.Configs.HasConnection())
+            if (APSRhino.IsConnected())
             {
-                var rconn = new APSConnectionInfo(APSRhino.Configs.Connection, APSRhino.Configs.GetAccountId());
-                if (_connectionInfo is null)
-                {
-                    DA.SetData(0, rconn);
-                }
-                else if (APSRhino.Configs.Connection.Equals(_connectionInfo.Value))
-                {
+                if (APSRhino.Configs.ConnectionInfo.Equals(_connectionInfo?.Value))
                     DA.SetData(0, _connectionInfo);
-                }
                 else
-                {
-                    AddRuntimeMessage(
-                        GH_RuntimeMessageLevel.Warning,
-                        "API is already authenticated. Skipping input connection info. " +
-                        "Click Reconnect to use input connection info"
-                        );
-
-                    DA.SetData(0, rconn);
-                }
-
+                    DA.SetData(0, new APSConnectionInfo(APSRhino.Configs.ConnectionInfo, APSRhino.Configs.GetAccountId()));
             }
             else if (State.Errored == APSAPI.State)
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, APSAPI.GetErrorMessage());
@@ -184,7 +168,7 @@ namespace APSGHPlugin.Components
             try
             {
                 if (_connectionInfo != null)
-                    APSRhino.Configs.Connection = _connectionInfo.Value;
+                    APSRhino.Configs.ConnectionInfo = _connectionInfo.Value;
 
                 await APSRhino.ReConnectAsync();
                 ExpireSolution(true);

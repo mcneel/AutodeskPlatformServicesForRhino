@@ -44,8 +44,8 @@ namespace APSGHPlugin
                 DA.SetData(1, info.Secret);
                 DA.SetData(2, conn.AccountId);
                 DA.SetData(3, info.CallbackUri.ToString());
-                DA.SetData(4, APSAPI.Bearer.GetToken());
-                DA.SetData(5, APSAPI.Bearer.GetRefreshToken());
+                DA.SetData(4, APSAPI.Bearer?.GetToken());
+                DA.SetData(5, APSAPI.Bearer?.GetRefreshToken());
             }
         }
     }

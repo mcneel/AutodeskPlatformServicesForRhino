@@ -16,6 +16,8 @@ namespace APSRHPlugin
     {
         public static APSRHPluginConfigs Configs { get; } = APSRHPluginConfigs.Read();
 
+        public static bool IsConnected() => Configs.ConnectionInfo != null && APSAPI.State == State.Connected;
+
         public static async Task<bool> CreateConnectionAsync()
         {
             var dlg = new APSConnectDialog();
@@ -23,7 +25,7 @@ namespace APSRHPlugin
 
             if (!dlg.Cancelled)
             {
-                Configs.Connection = dlg.Connection;
+                Configs.ConnectionInfo = dlg.Connection;
                 Configs.Account = dlg.Account;
             }
 
@@ -32,9 +34,9 @@ namespace APSRHPlugin
             return !dlg.Cancelled;
         }
 
-        public static Task<State> ConnectAsync() => APSAPI.ConnectAsync(Configs.Connection);
+        public static Task<State> ConnectAsync() => APSAPI.ConnectAsync(Configs.ConnectionInfo);
 
-        public static Task<State> ReConnectAsync() => APSAPI.ReConnectAsync(Configs.Connection);
+        public static Task<State> ReConnectAsync() => APSAPI.ReConnectAsync(Configs.ConnectionInfo);
 
         public static void ReportAPIError(Exception ex = null) => ReportError(ex?.Message ?? APSAPI.GetErrorMessage());
 

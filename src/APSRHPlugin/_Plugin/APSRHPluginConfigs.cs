@@ -11,18 +11,18 @@ namespace APSRHPlugin
         public const string DEFAULT_ACCOUNT_ID_ENV_VAR = "FORGE_ACCOUNT_ID";
 
         #region Configs
-        public ConnectionInfo Connection { get; set; }
+        public ConnectionInfo ConnectionInfo { get; set; }
 
         public string Account { get; set; }
         #endregion
 
-        public bool HasConnection() => Connection != null;
+        public bool HasConnection() => ConnectionInfo != null;
 
         public bool HasAccountId() => !string.IsNullOrEmpty(Account);
 
         public string GetAccountId()
         {
-            if (Connection is ConnectionInfoFromEnvVars)
+            if (ConnectionInfo is ConnectionInfoFromEnvVars)
                 return Environment.GetEnvironmentVariable(Account);
             return Account;
         }
@@ -52,14 +52,14 @@ namespace APSRHPlugin
                 switch (kind)
                 {
                     case 1:
-                        cfgs.Connection = new ConnectionInfoFromEnvVars(id, secret, callbackPort);
+                        cfgs.ConnectionInfo = new ConnectionInfoFromEnvVars(id, secret, callbackPort);
                         break;
 
                     default:
                         if (uint.TryParse(callbackPort, out uint port))
-                            cfgs.Connection = new ConnectionInfo(id, secret, port);
+                            cfgs.ConnectionInfo = new ConnectionInfo(id, secret, port);
                         else
-                            cfgs.Connection = new ConnectionInfo(id, secret);
+                            cfgs.ConnectionInfo = new ConnectionInfo(id, secret);
                         break;
                 }
             }
@@ -76,7 +76,7 @@ namespace APSRHPlugin
 
             // write connection
             var csettings = settings.AddChild("connection");
-            switch (Connection)
+            switch (ConnectionInfo)
             {
                 case ConnectionInfoFromEnvVars civars:
                     csettings.SetInteger("kind", 1);

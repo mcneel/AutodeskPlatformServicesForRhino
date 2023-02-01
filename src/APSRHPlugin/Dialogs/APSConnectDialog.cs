@@ -167,7 +167,7 @@ namespace APSRHPlugin.Dialogs
         {
             if (APSRhino.Configs.HasConnection())
             {
-                switch (APSRhino.Configs.Connection)
+                switch (APSRhino.Configs.ConnectionInfo)
                 {
                     case ConnectionInfoFromEnvVars cievar:
                         if (cievar.Equals(APSAPI.DefaultConnectionInfo))

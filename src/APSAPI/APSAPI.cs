@@ -285,7 +285,8 @@ namespace AutodeskPlatformServices
         static readonly RestClient _client = new RestClient("https://developer.api.autodesk.com/parameters/v1/");
         static readonly ManualResetEvent _init = new ManualResetEvent(false);
 
-        static string s_tokenCache = Path.Combine(Path.GetTempPath(), TOKEN_CACHE_FILE);
+        static readonly string s_tokenCache = Path.Combine(Path.GetTempPath(), TOKEN_CACHE_FILE);
+        
         static Exception _error;
         #endregion
 
@@ -927,14 +928,6 @@ namespace AutodeskPlatformServices
         }
         #endregion
 
-        public static void Configure(string path)
-        {
-            Bearer = default;
-            s_tokenCache = Path.Combine(path, TOKEN_CACHE_FILE);
-
-            ReadBearer();
-        }
-
         static RestRequest CreateRequest(string resource, Method method = Method.Get)
         {
             RestRequest request = new RestRequest(resource, method);
@@ -984,7 +977,8 @@ namespace AutodeskPlatformServices
         {
             try
             {
-                File.WriteAllText(s_tokenCache, Bearer.ToJson());
+                // FEATURE: enabling caching the token
+                //File.WriteAllText(s_tokenCache, Bearer.ToJson());
             }
             catch { }
         }
