@@ -1,0 +1,14 @@
+---
+name: AutodeskPlatformServicesForRhino
+version: 0.1.0-beta
+authors:
+- Ehsan Iran-Nejad
+description: Autodesk Platform Services Plugin For Rhino
+url: https://github.com/eirannejad/AutodeskPlatformServicesForRhino
+keywords:
+- revit
+- bim360
+- aps
+- autodesk
+- connector
+platform: win
