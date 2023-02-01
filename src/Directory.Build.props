@@ -6,7 +6,7 @@
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
-    <Version>0.1.0-beta</Version>
+    <Version>0.2.0-beta</Version>
     <OutputPath>$(SourceDir)\dist</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
