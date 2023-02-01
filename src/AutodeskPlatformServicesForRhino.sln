@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APSGHPlugin", "APSGHPlugin\APSGHPlugin.csproj", "{B779B4CF-F3FB-4430-953F-262A85938227}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APSAPI", "APSAPI\APSAPI.csproj", "{C9743FE3-C6DB-4E51-806A-1F4D8DBFB9D5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APSRHPlugin", "APSRHPlugin\APSRHPlugin.csproj", "{B36A50FC-F6CA-46B6-A080-611D08331E5D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B779B4CF-F3FB-4430-953F-262A85938227}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B779B4CF-F3FB-4430-953F-262A85938227}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B779B4CF-F3FB-4430-953F-262A85938227}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B779B4CF-F3FB-4430-953F-262A85938227}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9743FE3-C6DB-4E51-806A-1F4D8DBFB9D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9743FE3-C6DB-4E51-806A-1F4D8DBFB9D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9743FE3-C6DB-4E51-806A-1F4D8DBFB9D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9743FE3-C6DB-4E51-806A-1F4D8DBFB9D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B36A50FC-F6CA-46B6-A080-611D08331E5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B36A50FC-F6CA-46B6-A080-611D08331E5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B36A50FC-F6CA-46B6-A080-611D08331E5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B36A50FC-F6CA-46B6-A080-611D08331E5D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {00BBCA51-E7F3-4FD1-B775-1BBD292EC053}
+	EndGlobalSection
+EndGlobal

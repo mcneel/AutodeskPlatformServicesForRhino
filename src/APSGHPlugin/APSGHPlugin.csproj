@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Title>APSGHPlugin</Title>
+    <Description>Grasshopper plugin to interact with Autodesk Platform Services</Description>
+    <TargetExt>.gha</TargetExt>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grasshopper" Version="7.25.22326.19001" IncludeAssets="compile" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\APSAPI\APSAPI.csproj" />
+    <ProjectReference Include="..\APSRHPlugin\APSRHPlugin.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Icons\*.png" />
+  </ItemGroup>
+</Project>
