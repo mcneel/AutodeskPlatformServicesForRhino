@@ -2,7 +2,7 @@
 
 This is a Rhino+Grasshopper plugin that aims to provide access to Autodesk Platform Services. It requires an authenticated connection to the APIs, so you would need to create your own App or the APS platform and register for the available APIs.
 
-This first release of the plugins include utilities to use the new Parameter Services:
+This first release of the plugins include utilities to use the new [Parameter Services](https://blogs.autodesk.com/revit/2022/12/04/whats-new-in-parameters-service/):
 - Parameter Editor panel in Rhino: From this panel you can connect to APS and access the parameter collections under your account, adding or removing parameters to selected Rhino objects
 - Grasshopper components to connect to APS, and communicate with Parameter Services, querying disciplines, specs, categories, groups, collections, etc.
 
