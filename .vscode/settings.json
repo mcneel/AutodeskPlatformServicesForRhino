@@ -1,13 +1,14 @@
 {
-    "files.exclude": {
-        "**/.git": true,
-        "**/.svn": true,
-        "**/.hg": true,
-        "**/CVS": true,
-        "**/.DS_Store": true,
-        "**/Thumbs.db": true,
-        "**/obj": true,
-        "**/bin": true,
-        "**/build": true,
-    }
+  "files.exclude": {
+    "**/.git": true,
+    "**/.vs": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/obj": true,
+    "**/bin": true,
+    "**/build": true
+  }
 }
