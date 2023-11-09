@@ -16,7 +16,7 @@ namespace AutodeskPlatformServices
         [JsonPropertyName("nextUrl")] public string NextUrl { get; set; }
     }
 
-    public abstract class ListResult
+    public abstract class Result
     {
         [JsonPropertyName("pagination")] public Pagination Pages { get; set; }
 
@@ -33,32 +33,42 @@ namespace AutodeskPlatformServices
         }
     }
 
-    public class ListDisciplinesResult : ListResult
+    public class GetDisciplinesResult : Result
     {
-        [JsonPropertyName("results")] public List<Discipline> Disciplines { get; set; } = new List<Discipline>();
+        [JsonPropertyName("results")] public List<ClassificationDiscipline> Disciplines { get; set; } = new List<ClassificationDiscipline>();
     }
 
-    public class ListSpecsResult : ListResult
+    public class GetClassificationSpecsResult : Result
     {
-        [JsonPropertyName("results")] public List<Spec> Specs { get; set; } = new List<Spec>();
+        [JsonPropertyName("results")] public List<ClassificationSpec> Specs { get; set; } = new List<ClassificationSpec>();
     }
 
-    public class ListClassificationGroupResult : ListResult
+    public class GetClassificationUnitsResult : Result
+    {
+        [JsonPropertyName("results")] public List<ClassificationUnit> Specs { get; set; } = new List<ClassificationUnit>();
+    }
+
+    public class GetClassificationGroupsResult : Result
     {
         [JsonPropertyName("results")] public List<ClassificationGroup> ClassificationGroups { get; set; } = new List<ClassificationGroup>();
     }
 
-    public class ListClassificationCategoryResult : ListResult
+    public class GetClassificationCategoryResult : Result
     {
         [JsonPropertyName("results")] public List<ClassificationCategory> ClassificationCategories { get; set; } = new List<ClassificationCategory>();
     }
 
-    public class ListCollectionsResult : ListResult
+    public class GetGroupsResult : Result
+    {
+        [JsonPropertyName("results")] public List<Group> Groups { get; set; } = new List<Group>();
+    }
+
+    public class GetCollectionsResult : Result
     {
         [JsonPropertyName("results")] public List<Collection> Collections { get; set; } = new List<Collection>();
     }
 
-    public class ListParametersResult : ListResult
+    public class GetParametersResult : Result
     {
         [JsonPropertyName("results")] public List<Parameter> Parameters { get; set; } = new List<Parameter>();
     }

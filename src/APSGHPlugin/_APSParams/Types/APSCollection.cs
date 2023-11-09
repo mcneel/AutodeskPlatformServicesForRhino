@@ -13,16 +13,18 @@ namespace APSGHPlugin.Types
 
         public string Id => Value?.Id.ToString() ?? string.Empty;
         public string AccountId { get; } = string.Empty;
+        public Group Group { get; }
 
         public APSCollection() { }
 
-        public APSCollection(string accountId, Collection value)
+        public APSCollection(string accountId, Group group, Collection value)
         {
             AccountId = accountId;
+            Group = group;
             Value = value;
         }
 
-        public override IGH_Goo Duplicate() => new APSCollection(AccountId, Value);
+        public override IGH_Goo Duplicate() => new APSCollection(AccountId, Group, Value);
 
         public override string ToString() => IsValid ? $"Collection: {Value.Name} ({Value.Id})" : $"Invalid {TypeName}";
     }

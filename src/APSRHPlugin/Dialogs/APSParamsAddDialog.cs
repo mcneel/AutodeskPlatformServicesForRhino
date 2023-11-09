@@ -20,6 +20,8 @@ namespace APSRHPlugin.Dialogs
 
         readonly APSSpinner _spinner = new APSSpinner();
 
+        readonly DropDown _groupsSelector = new DropDown { Style = "apsrhplugin.dialogs.dropDown" };
+        
         readonly DropDown _collectionsSelector = new DropDown { Style = "apsrhplugin.dialogs.dropDown" };
 
         readonly TextBox _searchTerm = new TextBox { Style = "apsrhplugin.dialogs.textBox" };
@@ -100,7 +102,7 @@ namespace APSRHPlugin.Dialogs
             {
                 dlg._spinner.Spin();
 
-                Spec spec = await param.GetSpecAsync();
+                ClassificationSpec spec = await param.GetSpecAsync();
                 ClassificationGroup group = await param.GetGroupAsync();
                 IEnumerable<ClassificationCategory> categories = await param.GetCategoriesAsync();
 
@@ -115,6 +117,10 @@ namespace APSRHPlugin.Dialogs
             }
         }
 
+        public string SelectedGroup => _groupsSelector.SelectedKey;
+
+        public string SelectedCollection => _collectionsSelector.SelectedKey;
+
         public APSParamsAddDialog(IEnumerable<RhinoObject> objects)
         {
             Title = "Add APS Parameter";
@@ -123,15 +129,22 @@ namespace APSRHPlugin.Dialogs
 
             _spinner.SpinStopped += (s, e) =>
             {
+                bool hasGroups = _groupsSelector.Items.Any();
+                _groupsSelector.Enabled = _groupsSelector.Items.Count() > 1;
+
                 bool hasCollections = _collectionsSelector.Items.Any();
                 _collectionsSelector.Enabled = _collectionsSelector.Items.Count() > 1;
 
-                _searchTerm.Enabled = hasCollections;
-                _searchButton.Enabled = hasCollections;
-
+                _searchTerm.Enabled = hasGroups && hasCollections;
+                _searchButton.Enabled = hasGroups && hasCollections;
             };
 
+            _groupsSelector.Enabled = false;
+            _groupsSelector.SelectedIndexChanged += (s, e) => UpdateCollections();
+
             _collectionsSelector.Enabled = false;
+            _searchTerm.Enabled = false;
+            _searchButton.Enabled = false;
 
             _searchButton.Click += (s, e) => UpdateParameters();
 
@@ -166,6 +179,7 @@ namespace APSRHPlugin.Dialogs
                     {
                         Style = "apsrhplugin.dialogs.tableContent",
                         Rows = {
+                            _groupsSelector,
                             _collectionsSelector,
                             new TableLayout
                             {
@@ -198,7 +212,7 @@ namespace APSRHPlugin.Dialogs
 
             DefaultButton = _addParamButton;
 
-            UpdateCollections();
+            UpdateGroups();
         }
 
         protected override void Submit()
@@ -221,17 +235,43 @@ namespace APSRHPlugin.Dialogs
             }
         }
 
+        async void UpdateGroups()
+        {
+            _spinner.Spin();
+
+            try
+            {
+                _groupsSelector.Items.Clear();
+
+                GetGroupsResult res = await APSRhino.Parameters.GetGroupsAsync();
+
+                if (res.Groups.Any())
+                {
+                    foreach (AutodeskPlatformServices.Group group in res.Groups)
+                        _groupsSelector.Items.Add(group.Title, group.Id);
+
+                    _groupsSelector.SelectedIndex = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                Rhino.UI.Dialogs.ShowMessage($"API Error: {ex}", "APS Parameters");
+            }
+            finally
+            {
+                _spinner.UnSpin();
+            }
+        }
+
         async void UpdateCollections()
         {
             _spinner.Spin();
-            _searchTerm.Enabled = false;
-            _searchButton.Enabled = false;
 
             try
             {
                 _collectionsSelector.Items.Clear();
 
-                ListCollectionsResult res = await APSRhino.Parameters.ListCollectionsAsync();
+                GetCollectionsResult res = await APSRhino.Parameters.GetCollectionsAsync(SelectedGroup);
 
                 if (res.Collections.Any())
                 {
@@ -256,14 +296,12 @@ namespace APSRHPlugin.Dialogs
             if (_collectionsSelector.SelectedIndex >= 0
                  && !string.IsNullOrWhiteSpace(_searchTerm.Text))
             {
-                string collectionId = _collectionsSelector.SelectedKey;
-
                 _spinner.Spin();
                 _paramTree.Enabled = false;
 
                 try
                 {
-                    ListParametersResult res = await APSRhino.Parameters.ListParametersAsync(collectionId);
+                    GetParametersResult res = await APSRhino.Parameters.GetParametersAsync(SelectedGroup, SelectedCollection);
 
                     _root.Children.Clear();
                     foreach (Parameter param in res.Parameters)

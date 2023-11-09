@@ -27,7 +27,7 @@ namespace APSGHPlugin.Types
 
         public override string ToString()
         {
-            if (Parameter.GetSpec() is Spec spec)
+            if (Parameter.GetSpec() is ClassificationSpec spec)
                 return IsValid ? $"{Value} <{spec.Name} ({spec.Id})>" : $"Invalid {TypeName}";
             return IsValid ? $"{Value} <Unknown Spec>" : $"Invalid {TypeName}";
         }

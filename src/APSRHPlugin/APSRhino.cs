@@ -57,18 +57,25 @@ namespace APSRHPlugin
         #region Parameters API
         public static class Parameters
         {
-            public static Task<ListCollectionsResult> ListCollectionsAsync()
+            public static Task<GetGroupsResult> GetGroupsAsync()
             {
                 if (Configs.HasAccountId())
-                    return APSAPI.Parameters.ListCollectionsAsync(Configs.GetAccountId());
-                return Task.FromResult(new ListCollectionsResult());
+                    return APSAPI.Parameters.GetGroupsAsync(Configs.GetAccountId());
+                return Task.FromResult(new GetGroupsResult());
             }
 
-            public static Task<ListParametersResult> ListParametersAsync(string collectionId)
+            public static Task<GetCollectionsResult> GetCollectionsAsync(string groupId)
             {
                 if (Configs.HasAccountId())
-                    return APSAPI.Parameters.ListParametersAsync(Configs.GetAccountId(), collectionId);
-                return Task.FromResult(new ListParametersResult());
+                    return APSAPI.Parameters.GetCollectionsAsync(Configs.GetAccountId(), groupId);
+                return Task.FromResult(new GetCollectionsResult());
+            }
+
+            public static Task<GetParametersResult> GetParametersAsync(string groupId, string collectionId)
+            {
+                if (Configs.HasAccountId())
+                    return APSAPI.Parameters.GetParametersAsync(Configs.GetAccountId(), groupId, collectionId);
+                return Task.FromResult(new GetParametersResult());
             }
 
             public static IEnumerable<Parameter> GetParameters(RhinoDoc doc)

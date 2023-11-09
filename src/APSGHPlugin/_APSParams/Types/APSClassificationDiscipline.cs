@@ -5,20 +5,20 @@ using AutodeskPlatformServices;
 
 namespace APSGHPlugin.Types
 {
-    public class APSDiscipline : APSType<Discipline>
+    public class APSClassificationDiscipline : APSType<ClassificationDiscipline>
     {
         public override bool IsValid => Value != null;
         public override string TypeName => $"APS Discipline";
         public override string TypeDescription => $"Represents an APS Discipline";
 
-        public APSDiscipline() { }
+        public APSClassificationDiscipline() { }
 
-        public APSDiscipline(Discipline value)
+        public APSClassificationDiscipline(ClassificationDiscipline value)
         {
             Value = value;
         }
 
-        public override IGH_Goo Duplicate() => new APSDiscipline(Value);
+        public override IGH_Goo Duplicate() => new APSClassificationDiscipline(Value);
 
         public override string ToString() => IsValid ? $"Discipline: {Value.Name} ({Value.Id})" : $"Invalid {TypeName}";
     }

@@ -39,20 +39,20 @@ namespace APSGHPlugin.Components
             APSCollection collection = default;
             if (DA.GetData(0, ref collection))
             {
-                ListParametersResult results = default;
+                GetParametersResult results = default;
                 var parameters = new HashSet<Parameter>();
                 string searchTerm = default;
 
                 if (DA.GetData(1, ref searchTerm))
                 {
-                    results = APSAPI.Parameters.SearchParameters(collection.AccountId, collection.Id, searchTerm);
+                    results = APSAPI.Parameters.SearchParameters(collection.AccountId, collection.Group.Id, collection.Id, searchTerm);
                     parameters.UnionWith(results.Parameters);
                 }
                 else
                 {
                     do
                     {
-                        results = APSAPI.Parameters.ListParameters(collection.AccountId, collection.Id, results);
+                        results = APSAPI.Parameters.GetParameters(collection.AccountId, collection.Group.Id, collection.Id, results);
                         parameters.UnionWith(results.Parameters);
                     }
                     while (results.HasMore);

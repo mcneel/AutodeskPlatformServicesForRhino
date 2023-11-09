@@ -14,11 +14,11 @@ namespace APSGHPlugin
 
         public override string Description => "";
 
-        public override Guid Id => new Guid("8afc91a4-6940-483b-8854-45286b6eef0f");
+        public override Guid Id => new Guid("8AFC91A4-6940-483B-8854-45286B6EEF0F");
 
-        public override string AuthorName => "";
+        public override string AuthorName => "Ehsan Iran-Nejad";
 
-        public override string AuthorContact => "";
+        public override string AuthorContact => "ehsan@mcneel.com";
 
         #region Plugin Resources
         static readonly Assembly s_assembly = typeof(PluginInfo).Assembly;

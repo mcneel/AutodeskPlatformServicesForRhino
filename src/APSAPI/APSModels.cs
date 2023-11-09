@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace AutodeskPlatformServices
 {
-    public class Discipline
+    public class ClassificationDiscipline
     {
         [JsonPropertyName("id")] public string Id { get; set; }
         [JsonPropertyName("name")] public string Name { get; set; }
@@ -15,7 +15,7 @@ namespace AutodeskPlatformServices
         public override int GetHashCode() => Id.GetHashCode();
     }
 
-    public class Spec
+    public class ClassificationSpec
     {
         [JsonPropertyName("id")] public string Id { get; set; }
         [JsonPropertyName("name")] public string Name { get; set; }
@@ -23,9 +23,9 @@ namespace AutodeskPlatformServices
         [JsonPropertyName("applicableUnitIds")] public List<string> ApplicableUnitIds { get; set; }
         [JsonPropertyName("storageUnitId")] public string StorageUnitId { get; set; }
 
-        public Discipline GetDiscipline() => APSAPI.Parameters.GetDiscipline(DisciplineId);
+        public ClassificationDiscipline GetDiscipline() => APSAPI.Parameters.Classifications.GetDiscipline(DisciplineId);
 
-        public async Task<Discipline> GetDisciplineAsync() => await APSAPI.Parameters.GetDisciplineAsync(DisciplineId);
+        public async Task<ClassificationDiscipline> GetDisciplineAsync() => await APSAPI.Parameters.Classifications.GetDisciplineAsync(DisciplineId);
 
         // FIXME: use autodesk api to serialize validate value based on spec
         public bool ValidateValue(object _)
@@ -43,7 +43,7 @@ namespace AutodeskPlatformServices
         public override int GetHashCode() => Id.GetHashCode();
     }
 
-    public class Unit
+    public class ClassificationUnit
     {
         [JsonPropertyName("id")] public string Id { get; set; }
         [JsonPropertyName("name")] public string Name { get; set; }
@@ -71,6 +71,19 @@ namespace AutodeskPlatformServices
         [JsonPropertyName("disciplineIds")] public List<string> DisciplineIds { get; set; }
         [JsonPropertyName("parentCategoryId")] public string ParentCategoryId { get; set; }
         [JsonPropertyName("bindingId")] public string BindingId { get; set; }
+
+        public override int GetHashCode() => Id.GetHashCode();
+    }
+
+    public class Group
+    {
+        [JsonPropertyName("id")] public string Id { get; set; }
+        [JsonPropertyName("title")] public string Title { get; set; }
+        [JsonPropertyName("description")] public string Description { get; set; }
+        [JsonPropertyName("createdBy")] public string CreatedBy { get; set; }
+        [JsonPropertyName("createdAt")] public string CreatedAt { get; set; }
+        [JsonPropertyName("updatedBy")] public string UpdatedBy { get; set; }
+        [JsonPropertyName("updatedAt")] public string UpdatedAt { get; set; }
 
         public override int GetHashCode() => Id.GetHashCode();
     }
@@ -274,9 +287,9 @@ namespace AutodeskPlatformServices
 
         public bool IsValid() => !string.IsNullOrEmpty(Id);
 
-        public Spec GetSpec() => APSAPI.Parameters.GetSpec(SpecId);
+        public ClassificationSpec GetSpec() => APSAPI.Parameters.Classifications.GetSpec(SpecId);
 
-        public async Task<Spec> GetSpecAsync() => await APSAPI.Parameters.GetSpecAsync(SpecId);
+        public async Task<ClassificationSpec> GetSpecAsync() => await APSAPI.Parameters.Classifications.GetSpecAsync(SpecId);
 
         public bool IsHidden
         {
@@ -302,7 +315,7 @@ namespace AutodeskPlatformServices
             if (Metadata.OfType<CategoryEntry>()
                         .FirstOrDefault() is CategoryEntry cat
                         && cat.Value is IEnumerable<ClassificationCategory> cats)
-                return APSAPI.Parameters.GetCategories(cats.Select(c => c.Id));
+                return APSAPI.Parameters.Classifications.GetCategories(cats.Select(c => c.Id));
             return Enumerable.Empty<ClassificationCategory>();
         }
 
@@ -311,7 +324,7 @@ namespace AutodeskPlatformServices
             if (Metadata.OfType<CategoryEntry>()
                         .FirstOrDefault() is CategoryEntry cat
                         && cat.Value is IEnumerable<ClassificationCategory> cats)
-                return await APSAPI.Parameters.GetCategoriesAsync(cats.Select(c => c.Id));
+                return await APSAPI.Parameters.Classifications.GetCategoriesAsync(cats.Select(c => c.Id));
             return Enumerable.Empty<ClassificationCategory>();
         }
 
@@ -320,7 +333,7 @@ namespace AutodeskPlatformServices
             if (Metadata.OfType<GroupEntry>()
                         .FirstOrDefault() is GroupEntry group
                         && group.Value is ClassificationGroup g)
-                return APSAPI.Parameters.GetGroup(g.Id);
+                return APSAPI.Parameters.Classifications.GetGroup(g.Id);
             return null;
         }
 
@@ -329,7 +342,7 @@ namespace AutodeskPlatformServices
             if (Metadata.OfType<GroupEntry>()
                         .FirstOrDefault() is GroupEntry group
                         && group.Value is ClassificationGroup g)
-                return await APSAPI.Parameters.GetGroupAsync(g.Id);
+                return await APSAPI.Parameters.Classifications.GetGroupAsync(g.Id);
             return null;
         }
 

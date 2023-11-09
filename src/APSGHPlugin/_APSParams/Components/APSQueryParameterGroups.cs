@@ -11,12 +11,12 @@ using APSGHPlugin.Types;
 
 namespace APSGHPlugin.Components
 {
-    public class APSQueryCollections : APSComponent
+    public class APSQueryParameterGroups : APSComponent
     {
-        public override Guid ComponentGuid => new Guid("1A36C05C-6300-47A4-9CA3-F29924315738");
+        public override Guid ComponentGuid => new Guid("13DEAEE2-356A-4799-ACB0-037ECE6CAC1F");
 
-        public APSQueryCollections()
-          : base("Query Collections", "QPC", "Query parameter for given Autodesk account", "APS", "Parameters")
+        public APSQueryParameterGroups()
+          : base("Query Groups", "QPG", "Query parameter groups for given Autodesk account", "APS", "Parameters")
         {
         }
 
@@ -28,7 +28,7 @@ namespace APSGHPlugin.Components
 
         protected override void RegisterOutputParams(GH_OutputParamManager PM)
         {
-            PM.AddParameter(new APSCollectionParam(), "Collections", "C", "List of parameter collections", GH_ParamAccess.list);
+            PM.AddParameter(new APSGroupParam(), "Groups", "G", "List of parameter groups", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -36,17 +36,17 @@ namespace APSGHPlugin.Components
             APSConnectionInfo conn = default;
             if (DA.GetData(0, ref conn))
             {
-                var collections = new HashSet<Collection>();
+                var groups = new HashSet<Group>();
 
-                ListCollectionsResult results = default;
+                GetGroupsResult results = default;
                 do
                 {
-                    results = APSAPI.Parameters.ListCollections(conn.AccountId, results);
-                    collections.UnionWith(results.Collections);
+                    results = APSAPI.Parameters.GetGroups(conn.AccountId, results);
+                    groups.UnionWith(results.Groups);
                 }
                 while (results.HasMore);
 
-                DA.SetDataList(0, collections.Select(c => new APSCollection(conn.AccountId, c)));
+                DA.SetDataList(0, groups.Select(c => new APSGroup(conn.AccountId, c)));
             }
         }
     }

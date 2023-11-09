@@ -100,7 +100,7 @@ namespace APSRHPlugin.Panels
             async void UpdateAsync(APSParamsEditor parent, Parameter param)
             {
                 parent._spinner.Spin();
-                Spec spec = await param.GetSpecAsync();
+                ClassificationSpec spec = await param.GetSpecAsync();
                 Values[2] = spec is null ? "Unknown" : spec.Name;
 
                 parent._spinner.UnSpin();

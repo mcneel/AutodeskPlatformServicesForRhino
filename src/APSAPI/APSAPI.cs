@@ -498,337 +498,456 @@ namespace AutodeskPlatformServices
         {
             static readonly ConcurrentDictionary<string, object> s_cache = new ConcurrentDictionary<string, object>();
 
-            public static ListDisciplinesResult ListDisciplines(ListDisciplinesResult prev = null) => APIGet("disciplines", prev);
-
-            public static Task<ListDisciplinesResult> ListDisciplinesAsync(ListDisciplinesResult prev = null) => APIGetAsync("disciplines", prev);
-
-            public static Discipline GetDiscipline(string disciplineId)
+            #region Classifications
+            public static class Classifications
             {
-                if (string.IsNullOrWhiteSpace(disciplineId))
+                // https://aps.autodesk.com/en/docs/parameters/v1/reference/http/parameters-listdisciplinesv1-GET/
+                public static GetDisciplinesResult GetDisciplines(GetDisciplinesResult prev = null) => APIGet("disciplines", prev);
+
+                public static Task<GetDisciplinesResult> GetDisciplinesAsync(GetDisciplinesResult prev = null) => APIGetAsync("disciplines", prev);
+
+                public static ClassificationDiscipline GetDiscipline(string disciplineId)
+                {
+                    if (string.IsNullOrWhiteSpace(disciplineId))
+                        return null;
+
+                    if (s_cache.TryGetValue(disciplineId, out object discipline))
+                        return (ClassificationDiscipline)discipline;
+
+                    EnsureConnected();
+                    var request = CreateRequest("disciplines");
+                    request.AddParameter("ids", disciplineId);
+
+                    GetDisciplinesResult res = _client.Get<GetDisciplinesResult>(request);
+                    if (res.Disciplines.FirstOrDefault() is ClassificationDiscipline d)
+                    {
+                        s_cache.TryAdd(disciplineId, d);
+                        return d;
+                    }
+
                     return null;
-
-                if (s_cache.TryGetValue(disciplineId, out object discipline))
-                    return (Discipline)discipline;
-
-                EnsureConnected();
-                var request = CreateRequest("disciplines");
-                request.AddParameter("ids", disciplineId);
-
-                ListDisciplinesResult res = _client.Get<ListDisciplinesResult>(request);
-                if (res.Disciplines.FirstOrDefault() is Discipline d)
-                {
-                    s_cache.TryAdd(disciplineId, d);
-                    return d;
                 }
 
-                return null;
-            }
+                public static async Task<ClassificationDiscipline> GetDisciplineAsync(string disciplineId)
+                {
+                    if (string.IsNullOrWhiteSpace(disciplineId))
+                        return null;
 
-            public static async Task<Discipline> GetDisciplineAsync(string disciplineId)
-            {
-                if (string.IsNullOrWhiteSpace(disciplineId))
+                    if (s_cache.TryGetValue(disciplineId, out object discipline))
+                        return (ClassificationDiscipline)discipline;
+
+                    await EnsureConnectedAsync();
+                    var request = CreateRequest("disciplines");
+                    request.AddParameter("ids", disciplineId);
+
+                    GetDisciplinesResult res = await _client.GetAsync<GetDisciplinesResult>(request);
+                    if (res.Disciplines.FirstOrDefault() is ClassificationDiscipline d)
+                    {
+                        s_cache.TryAdd(disciplineId, d);
+                        return d;
+                    }
+
                     return null;
-
-                if (s_cache.TryGetValue(disciplineId, out object discipline))
-                    return (Discipline)discipline;
-
-                await EnsureConnectedAsync();
-                var request = CreateRequest("disciplines");
-                request.AddParameter("ids", disciplineId);
-
-                ListDisciplinesResult res = await _client.GetAsync<ListDisciplinesResult>(request);
-                if (res.Disciplines.FirstOrDefault() is Discipline d)
-                {
-                    s_cache.TryAdd(disciplineId, d);
-                    return d;
                 }
 
-                return null;
-            }
+                // https://aps.autodesk.com/en/docs/parameters/v1/reference/http/parameters-listspecsv1-GET/
+                public static GetClassificationSpecsResult GetSpecs(GetClassificationSpecsResult prev = null) => APIGet("specs", prev);
 
-            public static ListSpecsResult ListSpecs(ListSpecsResult prev = null) => APIGet("specs", prev);
+                public static Task<GetClassificationSpecsResult> GetSpecsAsync(GetClassificationSpecsResult prev = null) => APIGetAsync("specs", prev);
 
-            public static Task<ListSpecsResult> ListSpecsAsync(ListSpecsResult prev = null) => APIGetAsync("specs", prev);
+                public static ClassificationSpec GetSpec(string specId)
+                {
+                    if (string.IsNullOrWhiteSpace(specId))
+                        return null;
 
-            public static Spec GetSpec(string specId)
-            {
-                if (string.IsNullOrWhiteSpace(specId))
+                    if (s_cache.TryGetValue(specId, out object spec))
+                        return (ClassificationSpec)spec;
+
+                    EnsureConnected();
+                    var request = CreateRequest("specs");
+                    request.AddParameter("ids", specId);
+
+                    GetClassificationSpecsResult res = _client.Get<GetClassificationSpecsResult>(request);
+
+                    if (res.Specs.FirstOrDefault() is ClassificationSpec s)
+                    {
+                        s_cache.TryAdd(specId, s);
+                        return s;
+                    }
+
                     return null;
-
-                if (s_cache.TryGetValue(specId, out object spec))
-                    return (Spec)spec;
-
-                EnsureConnected();
-                var request = CreateRequest("specs");
-                request.AddParameter("ids", specId);
-
-                ListSpecsResult res = _client.Get<ListSpecsResult>(request);
-
-                if (res.Specs.FirstOrDefault() is Spec s)
-                {
-                    s_cache.TryAdd(specId, s);
-                    return s;
                 }
 
-                return null;
-            }
+                public static async Task<ClassificationSpec> GetSpecAsync(string specId)
+                {
+                    if (string.IsNullOrWhiteSpace(specId))
+                        return null;
 
-            public static async Task<Spec> GetSpecAsync(string specId)
-            {
-                if (string.IsNullOrWhiteSpace(specId))
+                    if (s_cache.TryGetValue(specId, out object spec))
+                        return (ClassificationSpec)spec;
+
+                    await EnsureConnectedAsync();
+                    var request = CreateRequest("specs");
+                    request.AddParameter("ids", specId);
+
+                    GetClassificationSpecsResult res = await _client.GetAsync<GetClassificationSpecsResult>(request);
+
+                    if (res.Specs.FirstOrDefault() is ClassificationSpec s)
+                    {
+                        s_cache.TryAdd(specId, s);
+                        return s;
+                    }
+
                     return null;
-
-                if (s_cache.TryGetValue(specId, out object spec))
-                    return (Spec)spec;
-
-                await EnsureConnectedAsync();
-                var request = CreateRequest("specs");
-                request.AddParameter("ids", specId);
-
-                ListSpecsResult res = await _client.GetAsync<ListSpecsResult>(request);
-
-                if (res.Specs.FirstOrDefault() is Spec s)
-                {
-                    s_cache.TryAdd(specId, s);
-                    return s;
                 }
 
-                return null;
-            }
+                // https://aps.autodesk.com/en/docs/parameters/v1/reference/http/parameters-listclassificationgroupsv1-GET/
+                public static GetClassificationGroupsResult GetGroups(bool bindable, GetClassificationGroupsResult prev = null)
+                    => APIGet(bindable ? $"classifications/groups?filter[bindable]=true" : $"classifications/groups", prev);
 
-            public static ListClassificationGroupResult ListClassificationGroup(bool bindable, ListClassificationGroupResult prev = null)
-                => APIGet(bindable ? $"classifications/groups?filter[bindable]=true" : $"classifications/groups", prev);
+                public static Task<GetClassificationGroupsResult> GetGroupsAsync(bool bindable, GetClassificationGroupsResult prev = null)
+                    => APIGetAsync(bindable ? $"classifications/groups?filter[bindable]=true" : $"classifications/groups", prev);
 
-            public static Task<ListClassificationGroupResult> ListClassificationGroupAsync(bool bindable, ListClassificationGroupResult prev = null)
-                => APIGetAsync(bindable ? $"classifications/groups?filter[bindable]=true" : $"classifications/groups", prev);
-
-            public static ClassificationGroup GetGroup(string groupId)
-            {
-                if (string.IsNullOrWhiteSpace(groupId))
-                    return null;
-
-                if (s_cache.TryGetValue(groupId, out object category))
-                    return (ClassificationGroup)category;
-
-                EnsureConnected();
-                var request = CreateRequest("classifications/groups");
-                request.AddParameter("ids", groupId);
-
-                ListClassificationGroupResult res = _client.Get<ListClassificationGroupResult>(request);
-
-                if (res.ClassificationGroups.FirstOrDefault() is ClassificationGroup c)
+                public static IEnumerable<ClassificationGroup> GetGroups(IEnumerable<string> groupIds)
                 {
-                    s_cache.TryAdd(groupId, c);
-                    return c;
+                    var categories = new HashSet<ClassificationGroup>();
+                    var missing = new HashSet<string>();
+                    foreach (string gid in groupIds)
+                    {
+                        if (string.IsNullOrWhiteSpace(gid))
+                            continue;
+
+                        if (s_cache.TryGetValue(gid, out object group))
+                            categories.Add((ClassificationGroup)group);
+                        else
+                            missing.Add(gid);
+                    }
+
+                    if (missing.Any())
+                    {
+                        EnsureConnected();
+                        var request = CreateRequest("classifications/groups");
+                        request.AddParameter("ids", string.Join(",", missing));
+
+                        GetClassificationGroupsResult res = _client.Get<GetClassificationGroupsResult>(request);
+                        categories.UnionWith(res.ClassificationGroups);
+                    }
+
+                    return categories;
                 }
 
-                return null;
-            }
-
-            public static async Task<ClassificationGroup> GetGroupAsync(string groupId)
-            {
-                if (string.IsNullOrWhiteSpace(groupId))
-                    return null;
-
-                if (s_cache.TryGetValue(groupId, out object category))
-                    return (ClassificationGroup)category;
-
-                EnsureConnected();
-                var request = CreateRequest("classifications/groups");
-                request.AddParameter("ids", groupId);
-
-                ListClassificationGroupResult res = await _client.GetAsync<ListClassificationGroupResult>(request);
-
-                if (res.ClassificationGroups.FirstOrDefault() is ClassificationGroup c)
+                public static async Task<IEnumerable<ClassificationGroup>> GetGroupsAsync(IEnumerable<string> groupIds)
                 {
-                    s_cache.TryAdd(groupId, c);
-                    return c;
+                    var categories = new HashSet<ClassificationGroup>();
+                    var missing = new HashSet<string>();
+                    foreach (string gid in groupIds)
+                    {
+                        if (string.IsNullOrWhiteSpace(gid))
+                            continue;
+
+                        if (s_cache.TryGetValue(gid, out object group))
+                            categories.Add((ClassificationGroup)group);
+                        else
+                            missing.Add(gid);
+                    }
+
+                    if (missing.Any())
+                    {
+                        EnsureConnected();
+                        var request = CreateRequest("classifications/groups");
+                        request.AddParameter("ids", string.Join(",", missing));
+
+                        GetClassificationGroupsResult res = await _client.GetAsync<GetClassificationGroupsResult>(request);
+                        categories.UnionWith(res.ClassificationGroups);
+                    }
+
+                    return categories;
                 }
 
-                return null;
-            }
-
-            public static IEnumerable<ClassificationGroup> GetGroups(IEnumerable<string> groupIds)
-            {
-                var categories = new HashSet<ClassificationGroup>();
-                var missing = new HashSet<string>();
-                foreach (string gid in groupIds)
+                public static ClassificationGroup GetGroup(string groupId)
                 {
-                    if (string.IsNullOrWhiteSpace(gid))
-                        continue;
+                    if (string.IsNullOrWhiteSpace(groupId))
+                        return null;
 
-                    if (s_cache.TryGetValue(gid, out object group))
-                        categories.Add((ClassificationGroup)group);
-                    else
-                        missing.Add(gid);
-                }
+                    if (s_cache.TryGetValue(groupId, out object category))
+                        return (ClassificationGroup)category;
 
-                if (missing.Any())
-                {
                     EnsureConnected();
                     var request = CreateRequest("classifications/groups");
-                    request.AddParameter("ids", string.Join(",", missing));
+                    request.AddParameter("ids", groupId);
 
-                    ListClassificationGroupResult res = _client.Get<ListClassificationGroupResult>(request);
-                    categories.UnionWith(res.ClassificationGroups);
+                    GetClassificationGroupsResult res = _client.Get<GetClassificationGroupsResult>(request);
+
+                    if (res.ClassificationGroups.FirstOrDefault() is ClassificationGroup c)
+                    {
+                        s_cache.TryAdd(groupId, c);
+                        return c;
+                    }
+
+                    return null;
                 }
 
-                return categories;
-            }
-
-            public static async Task<IEnumerable<ClassificationGroup>> GetGroupsAsync(IEnumerable<string> groupIds)
-            {
-                var categories = new HashSet<ClassificationGroup>();
-                var missing = new HashSet<string>();
-                foreach (string gid in groupIds)
+                public static async Task<ClassificationGroup> GetGroupAsync(string groupId)
                 {
-                    if (string.IsNullOrWhiteSpace(gid))
-                        continue;
+                    if (string.IsNullOrWhiteSpace(groupId))
+                        return null;
 
-                    if (s_cache.TryGetValue(gid, out object group))
-                        categories.Add((ClassificationGroup)group);
-                    else
-                        missing.Add(gid);
-                }
+                    if (s_cache.TryGetValue(groupId, out object category))
+                        return (ClassificationGroup)category;
 
-                if (missing.Any())
-                {
                     EnsureConnected();
                     var request = CreateRequest("classifications/groups");
-                    request.AddParameter("ids", string.Join(",", missing));
+                    request.AddParameter("ids", groupId);
 
-                    ListClassificationGroupResult res = await _client.GetAsync<ListClassificationGroupResult>(request);
-                    categories.UnionWith(res.ClassificationGroups);
-                }
+                    GetClassificationGroupsResult res = await _client.GetAsync<GetClassificationGroupsResult>(request);
 
-                return categories;
-            }
+                    if (res.ClassificationGroups.FirstOrDefault() is ClassificationGroup c)
+                    {
+                        s_cache.TryAdd(groupId, c);
+                        return c;
+                    }
 
-            public static ListClassificationCategoryResult ListClassificationCategories(bool bindable, ListClassificationCategoryResult prev = null)
-                => APIGet(bindable ? $"classifications/categories?filter[bindable]=true" : $"classifications/categories", prev);
-
-            public static Task<ListClassificationCategoryResult> ListClassificationCategoriesAsync(bool bindable, ListClassificationCategoryResult prev = null)
-                => APIGetAsync(bindable ? $"classifications/categories?filter[bindable]=true" : $"classifications/categories", prev);
-
-            public static ClassificationCategory GetCategory(string categoryId)
-            {
-                if (string.IsNullOrWhiteSpace(categoryId))
                     return null;
-
-                if (s_cache.TryGetValue(categoryId, out object category))
-                    return (ClassificationCategory)category;
-
-                EnsureConnected();
-                var request = CreateRequest("classifications/categories");
-                request.AddParameter("ids", categoryId);
-
-                ListClassificationCategoryResult res = _client.Get<ListClassificationCategoryResult>(request);
-
-                if (res.ClassificationCategories.FirstOrDefault() is ClassificationCategory c)
-                {
-                    s_cache.TryAdd(categoryId, c);
-                    return c;
                 }
 
-                return null;
-            }
+                // https://aps.autodesk.com/en/docs/parameters/v1/reference/http/parameters-listunitsv1-GET/
+                public static GetClassificationUnitsResult GetUnits(GetClassificationUnitsResult prev = null) => APIGet("units", prev);
 
-            public static async Task<ClassificationCategory> GetCategoryAsync(string categoryId)
-            {
-                if (string.IsNullOrWhiteSpace(categoryId))
+                public static Task<GetClassificationUnitsResult> GetUnitsAsync(GetClassificationUnitsResult prev = null) => APIGetAsync("units", prev);
+
+                public static ClassificationUnit GetUnit(string unitId)
+                {
+                    if (string.IsNullOrWhiteSpace(unitId))
+                        return null;
+
+                    if (s_cache.TryGetValue(unitId, out object unit))
+                        return (ClassificationUnit)unit;
+
+                    EnsureConnected();
+                    var request = CreateRequest("units");
+                    request.AddParameter("ids", unitId);
+
+                    GetClassificationUnitsResult res = _client.Get<GetClassificationUnitsResult>(request);
+
+                    if (res.Specs.FirstOrDefault() is ClassificationUnit u)
+                    {
+                        s_cache.TryAdd(unitId, u);
+                        return u;
+                    }
+
                     return null;
-
-                if (s_cache.TryGetValue(categoryId, out object category))
-                    return (ClassificationCategory)category;
-
-                EnsureConnected();
-                var request = CreateRequest("classifications/categories");
-                request.AddParameter("ids", categoryId);
-
-                ListClassificationCategoryResult res = await _client.GetAsync<ListClassificationCategoryResult>(request);
-
-                if (res.ClassificationCategories.FirstOrDefault() is ClassificationCategory c)
-                {
-                    s_cache.TryAdd(categoryId, c);
-                    return c;
                 }
 
-                return null;
-            }
-
-            public static IEnumerable<ClassificationCategory> GetCategories(IEnumerable<string> categoryIds)
-            {
-                var categories = new HashSet<ClassificationCategory>();
-                var missing = new HashSet<string>();
-                foreach (string cid in categoryIds)
+                public static async Task<ClassificationUnit> GetUnitAsync(string unitId)
                 {
-                    if (string.IsNullOrWhiteSpace(cid))
-                        continue;
+                    if (string.IsNullOrWhiteSpace(unitId))
+                        return null;
 
-                    if (s_cache.TryGetValue(cid, out object category))
-                        categories.Add((ClassificationCategory)category);
-                    else
-                        missing.Add(cid);
+                    if (s_cache.TryGetValue(unitId, out object spec))
+                        return (ClassificationUnit)spec;
+
+                    await EnsureConnectedAsync();
+                    var request = CreateRequest("units");
+                    request.AddParameter("ids", unitId);
+
+                    GetClassificationUnitsResult res = await _client.GetAsync<GetClassificationUnitsResult>(request);
+
+                    if (res.Specs.FirstOrDefault() is ClassificationUnit u)
+                    {
+                        s_cache.TryAdd(unitId, u);
+                        return u;
+                    }
+
+                    return null;
                 }
 
-                if (missing.Any())
+                // https://aps.autodesk.com/en/docs/parameters/v1/reference/http/parameters-listcategoriesv1-GET/
+                public static GetClassificationCategoryResult GetCategories(bool bindable, GetClassificationCategoryResult prev = null)
+                    => APIGet(bindable ? $"classifications/categories?filter[bindable]=true" : $"classifications/categories", prev);
+
+                public static Task<GetClassificationCategoryResult> GetCategoriesAsync(bool bindable, GetClassificationCategoryResult prev = null)
+                    => APIGetAsync(bindable ? $"classifications/categories?filter[bindable]=true" : $"classifications/categories", prev);
+
+                public static IEnumerable<ClassificationCategory> GetCategories(IEnumerable<string> categoryIds)
                 {
+                    var categories = new HashSet<ClassificationCategory>();
+                    var missing = new HashSet<string>();
+                    foreach (string cid in categoryIds)
+                    {
+                        if (string.IsNullOrWhiteSpace(cid))
+                            continue;
+
+                        if (s_cache.TryGetValue(cid, out object category))
+                            categories.Add((ClassificationCategory)category);
+                        else
+                            missing.Add(cid);
+                    }
+
+                    if (missing.Any())
+                    {
+                        EnsureConnected();
+                        var request = CreateRequest("classifications/categories");
+                        request.AddParameter("ids", string.Join(",", missing));
+
+                        GetClassificationCategoryResult res = _client.Get<GetClassificationCategoryResult>(request);
+                        categories.UnionWith(res.ClassificationCategories);
+                    }
+
+                    return categories;
+                }
+
+                public static async Task<IEnumerable<ClassificationCategory>> GetCategoriesAsync(IEnumerable<string> categoryIds)
+                {
+                    var categories = new HashSet<ClassificationCategory>();
+                    var missing = new HashSet<string>();
+                    foreach (string cid in categoryIds)
+                    {
+                        if (string.IsNullOrWhiteSpace(cid))
+                            continue;
+
+                        if (s_cache.TryGetValue(cid, out object category))
+                            categories.Add((ClassificationCategory)category);
+                        else
+                            missing.Add(cid);
+                    }
+
+                    if (missing.Any())
+                    {
+                        EnsureConnected();
+                        var request = CreateRequest("classifications/categories");
+                        request.AddParameter("ids", string.Join(",", missing));
+
+                        GetClassificationCategoryResult res = await _client.GetAsync<GetClassificationCategoryResult>(request);
+                        categories.UnionWith(res.ClassificationCategories);
+                    }
+
+                    return categories;
+                }
+
+                public static ClassificationCategory GetCategory(string categoryId)
+                {
+                    if (string.IsNullOrWhiteSpace(categoryId))
+                        return null;
+
+                    if (s_cache.TryGetValue(categoryId, out object category))
+                        return (ClassificationCategory)category;
+
                     EnsureConnected();
                     var request = CreateRequest("classifications/categories");
-                    request.AddParameter("ids", string.Join(",", missing));
+                    request.AddParameter("ids", categoryId);
 
-                    ListClassificationCategoryResult res = _client.Get<ListClassificationCategoryResult>(request);
-                    categories.UnionWith(res.ClassificationCategories);
+                    GetClassificationCategoryResult res = _client.Get<GetClassificationCategoryResult>(request);
+
+                    if (res.ClassificationCategories.FirstOrDefault() is ClassificationCategory c)
+                    {
+                        s_cache.TryAdd(categoryId, c);
+                        return c;
+                    }
+
+                    return null;
                 }
 
-                return categories;
-            }
-
-            public static async Task<IEnumerable<ClassificationCategory>> GetCategoriesAsync(IEnumerable<string> categoryIds)
-            {
-                var categories = new HashSet<ClassificationCategory>();
-                var missing = new HashSet<string>();
-                foreach (string cid in categoryIds)
+                public static async Task<ClassificationCategory> GetCategoryAsync(string categoryId)
                 {
-                    if (string.IsNullOrWhiteSpace(cid))
-                        continue;
+                    if (string.IsNullOrWhiteSpace(categoryId))
+                        return null;
 
-                    if (s_cache.TryGetValue(cid, out object category))
-                        categories.Add((ClassificationCategory)category);
-                    else
-                        missing.Add(cid);
-                }
+                    if (s_cache.TryGetValue(categoryId, out object category))
+                        return (ClassificationCategory)category;
 
-                if (missing.Any())
-                {
                     EnsureConnected();
                     var request = CreateRequest("classifications/categories");
-                    request.AddParameter("ids", string.Join(",", missing));
+                    request.AddParameter("ids", categoryId);
 
-                    ListClassificationCategoryResult res = await _client.GetAsync<ListClassificationCategoryResult>(request);
-                    categories.UnionWith(res.ClassificationCategories);
+                    GetClassificationCategoryResult res = await _client.GetAsync<GetClassificationCategoryResult>(request);
+
+                    if (res.ClassificationCategories.FirstOrDefault() is ClassificationCategory c)
+                    {
+                        s_cache.TryAdd(categoryId, c);
+                        return c;
+                    }
+
+                    return null;
                 }
-
-                return categories;
             }
+            #endregion
 
-            public static ListCollectionsResult ListCollections(string accoundId, ListCollectionsResult prev = null)
+            // https://aps.autodesk.com/en/docs/parameters/v1/reference/http/parameters-listgroups-GET/
+            public static GetGroupsResult GetGroups(string accoundId, GetGroupsResult prev = null)
             {
                 if (string.IsNullOrWhiteSpace(accoundId))
                     throw new ArgumentNullException(nameof(accoundId));
 
-                return APIGet($"accounts/{accoundId}/collections?offset=0", prev);
+                return APIGet($"accounts/{accoundId}/groups?offset=0", prev);
             }
 
-            public static Task<ListCollectionsResult> ListCollectionsAsync(string accoundId, ListCollectionsResult prev = null)
+            public static Task<GetGroupsResult> GetGroupsAsync(string accoundId, GetGroupsResult prev = null)
             {
                 if (string.IsNullOrWhiteSpace(accoundId))
                     throw new ArgumentNullException(nameof(accoundId));
 
-                return APIGetAsync($"accounts/{accoundId}/collections?offset=0", prev);
+                return APIGetAsync($"accounts/{accoundId}/groups?offset=0", prev);
             }
 
-            public static ListParametersResult ListParameters(string accoundId, string collectionId, ListParametersResult prev = null)
+            public static Group GetGroup(string groupId)
+            {
+                if (string.IsNullOrWhiteSpace(groupId))
+                    return null;
+
+                if (s_cache.TryGetValue(groupId, out object group))
+                    return (Group)group;
+
+                EnsureConnected();
+                Group res = _client.Get<Group>(CreateRequest($"groups/{groupId}"));
+
+                if (res is Group g)
+                {
+                    s_cache.TryAdd(groupId, g);
+                    return g;
+                }
+
+                return null;
+            }
+
+            public static async Task<Group> GetGroupAsync(string groupId)
+            {
+                if (string.IsNullOrWhiteSpace(groupId))
+                    return null;
+
+                if (s_cache.TryGetValue(groupId, out object group))
+                    return (Group)group;
+
+                EnsureConnected();
+                Group res = await _client.GetAsync<Group>(CreateRequest($"groups/{groupId}"));
+
+                if (res is Group g)
+                {
+                    s_cache.TryAdd(groupId, g);
+                    return g;
+                }
+
+                return null;
+            }
+
+            // https://aps.autodesk.com/en/docs/parameters/v1/reference/http/parameters-createcollection-POST/
+            public static GetCollectionsResult GetCollections(string accoundId, string groupId, GetCollectionsResult prev = null)
+            {
+                if (string.IsNullOrWhiteSpace(accoundId))
+                    throw new ArgumentNullException(nameof(accoundId));
+
+                return APIGet($"accounts/{accoundId}/groups/{groupId}/collections?offset=0", prev);
+            }
+
+            public static Task<GetCollectionsResult> GetCollectionsAsync(string accoundId, string groupId, GetCollectionsResult prev = null)
+            {
+                if (string.IsNullOrWhiteSpace(accoundId))
+                    throw new ArgumentNullException(nameof(accoundId));
+
+                return APIGetAsync($"accounts/{accoundId}/groups/{groupId}/collections?offset=0", prev);
+            }
+
+            // https://aps.autodesk.com/en/docs/parameters/v1/reference/http/parameters-listparameters-GET/
+            public static GetParametersResult GetParameters(string accoundId, string groupId, string collectionId, GetParametersResult prev = null)
             {
                 if (string.IsNullOrWhiteSpace(accoundId))
                     throw new ArgumentNullException(nameof(accoundId));
@@ -836,10 +955,10 @@ namespace AutodeskPlatformServices
                 if (string.IsNullOrWhiteSpace(collectionId))
                     throw new ArgumentNullException(nameof(collectionId));
 
-                return APIGet($"accounts/{accoundId}/collections/{collectionId}/parameters?offset=0", prev);
+                return APIGet($"accounts/{accoundId}/groups/{groupId}/collections/{collectionId}/parameters?offset=0", prev);
             }
 
-            public static Task<ListParametersResult> ListParametersAsync(string accoundId, string collectionId, ListParametersResult prev = null)
+            public static Task<GetParametersResult> GetParametersAsync(string accoundId, string groupId, string collectionId, GetParametersResult prev = null)
             {
                 if (string.IsNullOrWhiteSpace(accoundId))
                     throw new ArgumentNullException(nameof(accoundId));
@@ -847,7 +966,7 @@ namespace AutodeskPlatformServices
                 if (string.IsNullOrWhiteSpace(collectionId))
                     throw new ArgumentNullException(nameof(collectionId));
 
-                return APIGetAsync($"accounts/{accoundId}/collections/{collectionId}/parameters?offset=0", prev);
+                return APIGetAsync($"accounts/{accoundId}/groups/{groupId}/collections/{collectionId}/parameters?offset=0", prev);
             }
 
             public static Parameter GetParameter(string parameterId)
@@ -890,7 +1009,7 @@ namespace AutodeskPlatformServices
                 return null;
             }
 
-            public static ListParametersResult SearchParameters(string accoundId, string collectionId, string searchTerm)
+            public static GetParametersResult SearchParameters(string accoundId, string groupId, string collectionId, string searchTerm)
             {
                 if (string.IsNullOrWhiteSpace(accoundId))
                     throw new ArgumentNullException(nameof(accoundId));
@@ -902,13 +1021,13 @@ namespace AutodeskPlatformServices
                     throw new ArgumentNullException(nameof(searchTerm));
 
                 EnsureConnected();
-                var request = CreateRequest($"accounts/{accoundId}/collections/{collectionId}/parameters:search", Method.Post);
+                var request = CreateRequest($"accounts/{accoundId}/groups/{groupId}/collections/{collectionId}/parameters:search", Method.Post);
                 request.AddBody($"{{\"searchedText\": \"{searchTerm}\"}}");
 
-                return _client.Post<ListParametersResult>(request);
+                return _client.Post<GetParametersResult>(request);
             }
 
-            public static async Task<ListParametersResult> SearchParametersAsync(string accoundId, string collectionId, string searchTerm)
+            public static async Task<GetParametersResult> SearchParametersAsync(string accoundId, string groupId, string collectionId, string searchTerm)
             {
                 if (string.IsNullOrWhiteSpace(accoundId))
                     throw new ArgumentNullException(nameof(accoundId));
@@ -920,10 +1039,10 @@ namespace AutodeskPlatformServices
                     throw new ArgumentNullException(nameof(searchTerm));
 
                 await EnsureConnectedAsync();
-                var request = CreateRequest($"accounts/{accoundId}/collections/{collectionId}/parameters:search", Method.Post);
+                var request = CreateRequest($"accounts/{accoundId}/groups/{groupId}/collections/{collectionId}/parameters:search", Method.Post);
                 request.AddBody($"{{\"searchedText\": \"{searchTerm}\"}}");
 
-                return await _client.PostAsync<ListParametersResult>(request);
+                return await _client.PostAsync<GetParametersResult>(request);
             }
         }
         #endregion
@@ -936,7 +1055,7 @@ namespace AutodeskPlatformServices
             return request;
         }
 
-        static RestRequest CreateRequest<T>(string resource, Method method = Method.Get, T prev = null) where T : ListResult
+        static RestRequest CreateRequest<T>(string resource, Method method = Method.Get, T prev = null) where T : Result
         {
             RestRequest request = CreateRequest(resource, method);
             prev?.UpdateRequest(request);
@@ -944,13 +1063,13 @@ namespace AutodeskPlatformServices
             return request;
         }
 
-        static T APIGet<T>(string resource, T prev = null) where T : ListResult
+        static T APIGet<T>(string resource, T prev = null) where T : Result
         {
             EnsureConnected();
             return _client.Get<T>(CreateRequest(resource, Method.Get, prev));
         }
 
-        static async Task<T> APIGetAsync<T>(string resource, T prev = null) where T : ListResult
+        static async Task<T> APIGetAsync<T>(string resource, T prev = null) where T : Result
         {
             await EnsureConnectedAsync();
             return await _client.GetAsync<T>(CreateRequest(resource, Method.Get, prev));

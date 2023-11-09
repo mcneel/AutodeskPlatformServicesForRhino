@@ -11,12 +11,12 @@ using APSGHPlugin.Types;
 
 namespace APSGHPlugin.Components
 {
-    public class APSQueryDisciplines : APSComponent
+    public class APSQueryClassificationDisciplines : APSComponent
     {
         public override Guid ComponentGuid => new Guid("EA6A163D-8CDF-43DA-9CC8-AFB29C076E16");
 
-        public APSQueryDisciplines()
-          : base("Query Disciplines", "QD", "Query disciplines", "APS", "Parameters")
+        public APSQueryClassificationDisciplines()
+          : base("Query Classification Disciplines", "QD", "Query classification disciplines", "APS", "Parameters")
         {
         }
 
@@ -26,22 +26,22 @@ namespace APSGHPlugin.Components
 
         protected override void RegisterOutputParams(GH_OutputParamManager PM)
         {
-            PM.AddParameter(new APSDisciplineParam(), "Disciplines", "D", "List of disciplines", GH_ParamAccess.list);
+            PM.AddParameter(new APSClassificationDisciplineParam(), "Disciplines", "D", "List of disciplines", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            var disciplines = new HashSet<Discipline>();
+            var disciplines = new HashSet<ClassificationDiscipline>();
 
-            ListDisciplinesResult results = default;
+            GetDisciplinesResult results = default;
             do
             {
-                results = APSAPI.Parameters.ListDisciplines(results);
+                results = APSAPI.Parameters.Classifications.GetDisciplines(results);
                 disciplines.UnionWith(results.Disciplines);
             }
             while (results.HasMore);
 
-            DA.SetDataList(0, disciplines.Select(d => new APSDiscipline(d)));
+            DA.SetDataList(0, disciplines.Select(d => new APSClassificationDiscipline(d)));
         }
     }
 }

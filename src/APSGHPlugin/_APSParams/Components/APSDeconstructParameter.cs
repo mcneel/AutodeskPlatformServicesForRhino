@@ -27,11 +27,11 @@ namespace APSGHPlugin.Components
 
         protected override void RegisterOutputParams(GH_OutputParamManager PM)
         {
-            PM.AddTextParameter("Id", "T", "Parameter id", GH_ParamAccess.item);
+            PM.AddTextParameter("Id", "ID", "Parameter id", GH_ParamAccess.item);
             PM.AddTextParameter("Name", "N", "Parameter name", GH_ParamAccess.item);
             PM.AddTextParameter("Description", "D", "Parameter description", GH_ParamAccess.item);
             PM.AddBooleanParameter("ReadOnly", "RO", "Is parameter readonly?", GH_ParamAccess.item);
-            PM.AddParameter(new APSSpecParam(), "Spec", "S", "Parameter specification", GH_ParamAccess.item);
+            PM.AddParameter(new APSClassificationSpecParam(), "Spec", "S", "Parameter specification", GH_ParamAccess.item);
             PM.AddParameter(new APSClassificationGroupParam(), "Groups", "G", "Parameter classification groups", GH_ParamAccess.list);
             PM.AddParameter(new APSClassificationCategoryParam(), "Categories", "C", "Parameter classification categories", GH_ParamAccess.list);
             PM.AddBooleanParameter("Hidden", "H", "Is parameter hidden?", GH_ParamAccess.item);
@@ -50,8 +50,8 @@ namespace APSGHPlugin.Components
                 DA.SetData(2, p.Description);
                 DA.SetData(3, p.ReadOnly);
 
-                if (p.GetSpec() is Spec spec)
-                    DA.SetData(4, new APSSpec(spec));
+                if (p.GetSpec() is ClassificationSpec spec)
+                    DA.SetData(4, new APSClassificationSpec(spec));
 
                 if (p.GetGroup() is ClassificationGroup group)
                     DA.SetData(5, new APSClassificationGroup(group));

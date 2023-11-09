@@ -26,7 +26,7 @@ namespace APSRHPlugin
         // FIXME: use autodesk api to serialize value based on spec
         public bool SetParam(Parameter param, object value = default)
         {
-            if (param.GetSpec() is Spec spec)
+            if (param.GetSpec() is ClassificationSpec spec)
             {
                 if (spec.ValidateValue(value))
                     return _table.Set(param.Id, (value ?? string.Empty).ToString());

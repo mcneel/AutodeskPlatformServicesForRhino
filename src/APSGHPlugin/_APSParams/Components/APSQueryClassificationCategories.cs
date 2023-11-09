@@ -38,10 +38,10 @@ namespace APSGHPlugin.Components
 
             var categories = new HashSet<ClassificationCategory>();
 
-            ListClassificationCategoryResult results = default;
+            GetClassificationCategoryResult results = default;
             do
             {
-                results = APSAPI.Parameters.ListClassificationCategories(bindable, results);
+                results = APSAPI.Parameters.Classifications.GetCategories(bindable, results);
                 categories.UnionWith(results.ClassificationCategories);
             }
             while (results.HasMore);
