@@ -12,7 +12,7 @@ namespace APSGHPlugin
     {
         public override string Name => "AutodeskPlatformServices";
 
-        public override string Description => "";
+        public override string Description => "Autodesk Platform Services Components for Grasshopper";
 
         public override Guid Id => new Guid("8AFC91A4-6940-483B-8854-45286B6EEF0F");
 
