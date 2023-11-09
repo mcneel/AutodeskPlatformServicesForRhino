@@ -17,6 +17,13 @@ This first release of the plugins include utilities to use the new [Parameter Se
 - Add build path to `GrasshopperDeveloperSettings` command in Rhino
 - Install `*.rhp` plugin inside the build path in Rhino
 
+## Install
+
+You can install this plugin from Rhino package manager by running **Package Manager** command. Make sure the "Include Pre-Releases" checkbox is checked. 
+
+![](docs/rh_pkgmgr_install.png)
+
+
 ### Connect to APS (Rhino)
 
 ![](docs/rh_edit_panel.png)
