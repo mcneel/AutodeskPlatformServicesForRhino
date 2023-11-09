@@ -21,7 +21,7 @@ namespace APSRHPlugin.Dialogs
         readonly APSSpinner _spinner = new APSSpinner();
 
         readonly DropDown _groupsSelector = new DropDown { Style = "apsrhplugin.dialogs.dropDown" };
-        
+
         readonly DropDown _collectionsSelector = new DropDown { Style = "apsrhplugin.dialogs.dropDown" };
 
         readonly TextBox _searchTerm = new TextBox { Style = "apsrhplugin.dialogs.textBox" };
@@ -94,7 +94,10 @@ namespace APSRHPlugin.Dialogs
             {
                 Parameter = param;
 
-                Values = new object[] { param.Name, null, null, null };
+                string name = string.IsNullOrWhiteSpace(param.Name) ? "?" : param.Name;
+
+                Values = new object[] { name, null, null, null };
+
                 UpdateAsync(dlg, param);
             }
 
@@ -170,6 +173,8 @@ namespace APSRHPlugin.Dialogs
 
             SetSize(new Size(600, 700), new Size(400, 400));
 
+            const int LABEL_WIDTH = 60;
+
             Content = new TableLayout
             {
                 Rows =
@@ -179,8 +184,6 @@ namespace APSRHPlugin.Dialogs
                     {
                         Style = "apsrhplugin.dialogs.tableContent",
                         Rows = {
-                            _groupsSelector,
-                            _collectionsSelector,
                             new TableLayout
                             {
                                 Style = "apsrhplugin.dialogs.tableLayout",
@@ -188,7 +191,33 @@ namespace APSRHPlugin.Dialogs
                                 {
                                     new TableRow {
                                         Cells = {
-                                            new Label { Text = "Search" },
+                                            new Label { Text = "Groups", Width = LABEL_WIDTH },
+                                            new TableCell { Control = _groupsSelector, ScaleWidth = true },
+                                        }
+                                    }
+                                }
+                            },
+                            new TableLayout
+                            {
+                                Style = "apsrhplugin.dialogs.tableLayout",
+                                Rows =
+                                {
+                                    new TableRow {
+                                        Cells = {
+                                            new Label { Text = "Collections", Width = LABEL_WIDTH },
+                                            new TableCell { Control = _collectionsSelector, ScaleWidth = true },
+                                        }
+                                    }
+                                }
+                            },
+                            new TableLayout
+                            {
+                                Style = "apsrhplugin.dialogs.tableLayout",
+                                Rows =
+                                {
+                                    new TableRow {
+                                        Cells = {
+                                            new Label { Text = "Search", Width = LABEL_WIDTH },
                                             new TableCell { Control = _searchTerm, ScaleWidth = true },
                                             _searchButton
                                         }
@@ -248,14 +277,17 @@ namespace APSRHPlugin.Dialogs
                 if (res.Groups.Any())
                 {
                     foreach (AutodeskPlatformServices.Group group in res.Groups)
-                        _groupsSelector.Items.Add(group.Title, group.Id);
+                    {
+                        string title = string.IsNullOrWhiteSpace(group.Title) ? $"Untitled ({group.Id})" : group.Title;
+                        _groupsSelector.Items.Add(title, group.Id);
+                    }
 
                     _groupsSelector.SelectedIndex = 0;
                 }
             }
             catch (Exception ex)
             {
-                Rhino.UI.Dialogs.ShowMessage($"API Error: {ex}", "APS Parameters");
+                ShowError(ex);
             }
             finally
             {
@@ -276,14 +308,17 @@ namespace APSRHPlugin.Dialogs
                 if (res.Collections.Any())
                 {
                     foreach (Collection collection in res.Collections)
-                        _collectionsSelector.Items.Add(collection.Name, collection.Id);
+                    {
+                        string title = string.IsNullOrWhiteSpace(collection.Name) ? $"Untitled ({collection.Id})" : collection.Name;
+                        _collectionsSelector.Items.Add(title, collection.Id);
+                    }
 
                     _collectionsSelector.SelectedIndex = 0;
                 }
             }
             catch (Exception ex)
             {
-                Rhino.UI.Dialogs.ShowMessage($"API Error: {ex}", "APS Parameters");
+                ShowError(ex);
             }
             finally
             {
@@ -310,7 +345,7 @@ namespace APSRHPlugin.Dialogs
                 }
                 catch (Exception ex)
                 {
-                    Rhino.UI.Dialogs.ShowMessage($"API Error: {ex}", "APS Parameters");
+                    ShowError(ex);
                 }
                 finally
                 {
@@ -318,6 +353,20 @@ namespace APSRHPlugin.Dialogs
                     _spinner.UnSpin();
                 }
             }
+        }
+
+        void ShowError(Exception ex)
+        {
+            Rhino.UI.Dialogs.ShowMessage(
+                    this,
+                    $"API Error: {ex}",
+                    "APS Parameters",
+                    Rhino.UI.ShowMessageButton.OK,
+                    Rhino.UI.ShowMessageIcon.Error,
+                    Rhino.UI.ShowMessageDefaultButton.Button1,
+                    Rhino.UI.ShowMessageOptions.TopMost,
+                    Rhino.UI.ShowMessageMode.ApplicationModal
+                );
         }
     }
 }
