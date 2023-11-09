@@ -16,5 +16,6 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Icons\*.png" />
+    <EmbeddedResource Include="APSRHPlugin.ico" />
   </ItemGroup>
 </Project>

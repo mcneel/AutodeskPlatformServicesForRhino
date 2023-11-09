@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Reflection;
 
@@ -19,6 +20,8 @@ namespace APSGHPlugin
         public override string AuthorName => "Ehsan Iran-Nejad";
 
         public override string AuthorContact => "ehsan@mcneel.com";
+
+        public override Bitmap AssemblyIcon => GetBitmap(s_assembly, "APSComponent");
 
         #region Plugin Resources
         static readonly Assembly s_assembly = typeof(PluginInfo).Assembly;
