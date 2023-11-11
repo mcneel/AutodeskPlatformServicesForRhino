@@ -78,6 +78,19 @@ namespace APSRHPlugin
                 return Task.FromResult(new GetParametersResult());
             }
 
+            public static Task<GetParametersResult> GetParametersAsync(string groupId, string collectionId, string searchTerm)
+            {
+                if (Configs.HasAccountId())
+                {
+                    if (string.IsNullOrEmpty(searchTerm))
+                        return APSAPI.Parameters.GetParametersAsync(Configs.GetAccountId(), groupId, collectionId);
+                    else
+                        return APSAPI.Parameters.SearchParametersAsync(Configs.GetAccountId(), groupId, collectionId, searchTerm);
+                }
+
+                return Task.FromResult(new GetParametersResult());
+            }
+
             public static IEnumerable<Parameter> GetParameters(RhinoDoc doc)
             {
                 var parameters = new HashSet<Parameter>();

@@ -146,9 +146,10 @@ namespace APSRHPlugin.Dialogs
             _groupsSelector.SelectedIndexChanged += (s, e) => UpdateCollections();
 
             _collectionsSelector.Enabled = false;
+            _collectionsSelector.SelectedIndexChanged += (s, e) => UpdateParameters();
+
             _searchTerm.Enabled = false;
             _searchButton.Enabled = false;
-
             _searchButton.Click += (s, e) => UpdateParameters();
 
             _paramTree.Columns.Add(_paramName);
@@ -328,15 +329,15 @@ namespace APSRHPlugin.Dialogs
 
         async void UpdateParameters()
         {
-            if (_collectionsSelector.SelectedIndex >= 0
-                 && !string.IsNullOrWhiteSpace(_searchTerm.Text))
+            if (_collectionsSelector.SelectedIndex >= 0)
             {
                 _spinner.Spin();
                 _paramTree.Enabled = false;
 
                 try
                 {
-                    GetParametersResult res = await APSRhino.Parameters.GetParametersAsync(SelectedGroup, SelectedCollection);
+                    GetParametersResult res =
+                        await APSRhino.Parameters.GetParametersAsync(SelectedGroup, SelectedCollection, _searchTerm.Text);
 
                     _root.Children.Clear();
                     foreach (Parameter param in res.Parameters)
